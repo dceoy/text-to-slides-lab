@@ -1,4 +1,4 @@
-# GitHub Actions と GitHub Copilot の活用
+# AI Coding & CI/CD using GitHub
 
 ## Contents
 
@@ -20,36 +20,35 @@
 
 ## Executive Summary
 
-- GitHub Actions: CI/CD を中心とした **決定論的な自動化基盤** (再現性・強制力)
-- GitHub Copilot: 実装/修正/レビューを加速する **確率論的な生成・推論エンジン**
-- 重要な設計原則: Copilot の出力を「信頼」するのではなく、Actions で **検証・拘束** して安全に運用する
+- GitHub Actions: CI/CD を中心とした決定論的な自動化基盤 (再現性・強制力)
+- GitHub Copilot: 実装/修正/レビューを加速する確率論的な生成・推論エンジン
+- 重要な設計原則: Copilot の出力を「信頼」するのではなく、Actions で検証・拘束して安全に運用する
   - security hardening: インジェクション/サプライチェーン対策 (静的解析 + SHA pin + 最小権限)
   - context engineering: AGENTS.md / Skills / Spec を "永続成果物" として外部化し、迷走を防ぐ
-  - コスト最適化: Premium Requests を「難しいタスク」に集中投下 (入力の構造化 / CI ガードレール)
 
 ## Overview of GitHub Actions
 
-- GitHub 上で build/test/deploy を自動実行する CI/CD プラットフォーム
-- 基本要素: event → workflow (YAML) → jobs (runner) → steps (run/uses) → artifacts
-- 実務での設計ポイント
-  - **最小権限**: `permissions:` を workflow/job 単位で絞る (不要な write 権限を持たせない)
-  - secrets: `secrets` / `environment` / OIDC の使い分け (fork PR への露出に注意)
-  - フィードバック速度: cache / matrix / concurrency で待ち時間を削減
-- Copilot と組み合わせるときの役割: AI が作った差分を **決定論的に検証するゲート** として CI を設計する
+- build/test/deploy を自動化する CI/CD
+- 構成: event → workflow → job → step → artifact
+- 設計
+  - permissions は最小限
+  - secrets / environment / OIDC を使い分け
+  - cache / matrix / concurrency で高速化
+- Copilot の差分は CI で検証
 
 ## GitHub Actions Reusable Workflows
 
-- 目的: 組織横断の標準パイプライン (build/test/release) を **再利用可能コンポーネント** として提供
-- `on: workflow_call` で呼び出し可能化し、`inputs` / `secrets` を明示的に受け渡す ([GitHub Docs][3])
-- 使い分け (現場で効く粒度の分離)
-  - Composite Action: 複数 step を 1 つの action として配布 (セットアップ等の共通化) ([GitHub Docs][25])
-  - Reusable Workflow: ジョブ群 (ビルド/テスト/スキャン/デプロイ) をテンプレ化して呼び出す
-- 重要制約 (設計時にハマりやすい)
-  - 再利用 workflow は `.github/workflows` 配下 (サブディレクトリ不可) ([GitHub Docs][3])
-  - `environment` 経由の secret 受け渡しには制約がある (呼び出し側から `workflow_call` では渡せない) ([GitHub Docs][3])
-- ガバナンス: チェーン上で権限は"維持 or 減らす"方向 (昇格不可) を前提に設計 ([GitHub Docs][3])
-- 運用パターン: `.github` リポジトリに標準 workflow/action を集約し、各リポジトリの設定ドリフトを抑える
-- Rulesets: required checks やマージ条件を組織横断で強制し、標準パイプラインの遵守を担保 ([GitHub Docs][26])
+- 目的: 共通パイプラインを再利用
+- `workflow_call` で inputs/secrets を受け渡す（[GitHub Docs][3]）
+- 使い分け
+  - Composite Action: step をまとめる（[GitHub Docs][25]）
+  - Reusable Workflow: job 群をまとめる
+- 制約
+  - `.github/workflows` 直下のみ（[GitHub Docs][3]）
+  - environment secrets は渡せない（[GitHub Docs][3]）
+- 権限は昇格不可（[GitHub Docs][3]）
+- `.github` リポで標準化
+- Rulesets で必須チェックを強制（[GitHub Docs][26]）
 
 References:
 
@@ -59,15 +58,15 @@ References:
 
 ## Static analysis for GitHub Actions
 
-- 目的: CI 設定・IaC・依存関係の"壊れやすい/危険"ポイントを **PR 時点で機械的に潰す**
-- 背景: Expressions と shell 展開の境界で **インジェクション** が起きやすい (Issue/PR タイトル等の入力を `run:` に埋め込むなど)
-- もう一つの主要リスク: サードパーティ action の **サプライチェーン** (mutable tag) → SHA pinning が効く
-- actionlint: workflow 構文/式の静的検査＋`run:` へ shellcheck 等を適用 ([GitHub][4])
-- zizmor: GitHub Actions 向けセキュリティ観点の静的解析 (典型的な危険パターン検出、persona で感度調整) ([GitHub][5])
-- pinact: actions / reusable workflow を commit SHA pin に自動変換 (タグ可変リスクの低減) ([GitHub][6])
-  - 運用メモ: SHA pin は「更新のパラドックス」を生むため、Dependabot/Renovate 等で更新 PR を回す
-- checkov: Terraform 等の IaC misconfiguration を policy-as-code で検出 ([Checkov][7])
-- 補足: GitHub 側でも SHA pinning のポリシー強化が進行 (組織統制で "強制" 可能な方向へ) ([The GitHub Blog][8])
+- 目的: 危険ポイントを PR で潰す
+- リスク: expressions×shell でインジェクション
+- リスク: action の supply chain → SHA pin
+- actionlint: YAML/式 + shellcheck（[GitHub][4]）
+- zizmor: Actions セキュリティ lint（[GitHub][5]）
+- pinact: SHA pin へ変換（[GitHub][6]）
+  - 更新は Dependabot/Renovate で回す
+- checkov: IaC ポリシー検査（[Checkov][7]）
+- GitHub でも pin 強制が進行（[The GitHub Blog][8]）
 
 References:
 
@@ -79,12 +78,12 @@ References:
 
 ## Dependabot Pull Request
 
-- 目的: 依存関係更新 (version updates / security updates) を PR 化し、レビュー可能な変更単位に落とす
-- `dependabot.yml` は **デフォルトブランチの `.github/` 配下** に配置 (更新で即時チェックが走る) ([GitHub Docs][9])
-- Best practice (運用品質を上げる)
-  - update 対象 (ecosystem / directory) を明確化、頻度 (daily/weekly/monthly) をチーム運用に合わせる ([GitHub Docs][9])
-  - PR ノイズを抑える: グルーピング、上限 (open PR limit) 、ignore ルール、更新窓 (運用時間) を設計 (設定項目は公式リファレンス参照) ([GitHub Docs][9])
-- 補足: `package-ecosystem: github-actions` で Actions の `uses:` も更新対象にできる (pinact 併用時は特に重要)
+- 目的: 依存更新を PR にする
+- `dependabot.yml` は `.github/`（default branch）（[GitHub Docs][9]）
+- Best practice
+  - 対象と頻度を決める（[GitHub Docs][9]）
+  - grouping / limit / ignore / 更新窓を設計（[GitHub Docs][9]）
+- `github-actions` で `uses:` も更新
 
 References:
 
@@ -92,11 +91,11 @@ References:
 
 ## Dependabot Alerts
 
-- 目的: 脆弱な依存関係を検知し、Security タブ上で可視化・通知・トリアージ
-- 重要: Alerts は `dependabot.yml` ではなく **リポジトリ/組織の Settings で有効化** ([GitHub Docs][10])
-- 通知設計: ダイジェスト (daily/weekly) 等で運用負荷を最適化 ([GitHub Docs][10])
-- 補完 (Trivy) : コンテナ/IaC から SBOM を生成し、Security タブへ登録 (例: `aquasecurity/trivy-action`) ([GitHub][11])
-- 運用の勘所: アラート対応を「人の判断」だけにせず、security updates PR + required checks で機械的に回す
+- 目的: 脆弱性を検知して通知
+- Alerts は Settings で有効化（[GitHub Docs][10]）
+- 通知はダイジェストで運用（[GitHub Docs][10]）
+- Trivy: SBOM を登録（[GitHub][11]）
+- 対応は PR + required checks で回す
 
 References:
 
@@ -107,11 +106,11 @@ References:
 
 ## GitHub Copilot
 
-- 立ち位置: IDE 支援 (提案/チャット) から **PR 単位で成果物を出す"エージェント"**へ拡張
-- 導入の勘所
-  - チーム標準: コーディング規約・設計原則・テスト方針を "機械可読な指示" としてリポジトリに置く (後述の AGENTS.md / Skills)
-  - ガードレール: CI (Actions) を AI の出力検証ラインにして"自動生成の事故"を吸収する
-- 使い分けの基本: 雑な自然言語のまま「Vibe Coding」しない (Spec/DoD/チェックリストを先に渡す)
+- IDE 支援から PR エージェントへ
+- 導入
+  - 規約/方針をリポジトリに置く（AGENTS.md / Skills）
+  - CI をガードレールにする
+- Spec/DoD を先に渡す
 
 References:
 
@@ -119,11 +118,11 @@ References:
 
 ## GitHub Agent HQ
 
-- GitHub 上で、複数のコーディングエージェントを単一の統合ワークフローとして扱う構想 (Agent HQ)
-- Mission control で、タスク割当・途中介入 (steer) ・進捗/セッションログ追跡・PRレビューを一元管理 (GitHub / Mobile / CLI / VS Code 横断)
-- Copilot 有償サブスクリプションの枠内で、Copilot に加えてサードパーティ製エージェントも同一プラットフォームに統合していく (オープン・エコシステム)
-- Custom agents で、用途別にプロンプト/ツール/コンテキストを最適化したエージェントを作成し、チーム共有可能
-- VS Code の Plan Mode で、コード生成前にステップ分解した実装計画を作り、可視性と制御性を確保
+- 複数エージェントを統合管理（Agent HQ）
+- Mission control: 割当/介入/ログ/レビュー
+- サードパーティも統合へ
+- Custom agents を共有
+- Plan Mode で手順を可視化
 
 References:
 
@@ -131,13 +130,12 @@ References:
 
 ## GitHub Copilot Premium Requests
 
-- Premium request は機能ごとに消費単位が異なる (例: Chat=1 prompt、Coding Agent=1 session 等、モデル倍率あり) ([GitHub Docs][12])
-- Premium Request が増える典型パターン
-  - 高性能モデルの多用 / 大きすぎるタスク / 仕様が曖昧で往復が増える
-- コスト最適化の実務
-  - "雑談" を減らし、入力を構造化 (Spec/チェックリスト/受け入れ基準を先に渡す)
-  - Agent に投げる前に CI ガードレール (lint/test/security) を整備し、リトライ回数を削減
-  - 難しい問題だけに Premium を投下し、単純作業は標準モデル + Actions 自動化で吸収する
+- 機能ごとに消費が違う（[GitHub Docs][12]）
+- 増える原因: 高性能モデル / 大タスク / 曖昧仕様
+- コスト対策
+  - 入力を構造化（Spec/基準）
+  - CI でリトライ削減
+  - Premium は難題に集中
 
 References:
 
@@ -145,13 +143,13 @@ References:
 
 ## GitHub Copilot Coding Agent
 
-- できること: PR を新規作成/既存 PR を更新し、最終的に人間へレビュー要求 (開発フローにネイティブ統合) ([GitHub Docs][13])
-- 使いどころ (エンジニア向け実務)
-  - "小〜中" 粒度の変更 (リファクタ、テスト追加、ドキュメント整備、ルール適用) を **PR で受領**する
-  - 変更指示は PR コメントで `@copilot` などを用いて差分駆動で反復 (レビュー効率が高い) ([GitHub Docs][14])
-- 成功率を上げるコツ
-  - 受け入れ基準 (DoD) と検証コマンド (`npm test` 等) を明示し、CI と一致させる
-  - 変更範囲の境界 (触ってよい/悪いディレクトリ、互換性制約) を AGENTS.md に固定する
+- PR を作り、レビューを依頼（[GitHub Docs][13]）
+- 使いどころ
+  - 小〜中変更を PR で受ける
+  - コメントで差分指示（[GitHub Docs][14]）
+- コツ
+  - DoD と検証コマンドを明示
+  - 境界を AGENTS.md に書く
 
 References:
 
@@ -160,19 +158,18 @@ References:
 
 ## AGENTS.md & Agent Skills
 
-- AGENTS.md: コーディングエージェント向けの "README" という位置づけのオープンフォーマット ([エージェント.md][15])
-- Agent Skills: 手順/スクリプト/規約をフォルダとして提供し、Copilot が状況に応じてロードできる (VS Code 連携) ([code.visualstudio.com][16])
-- 推奨する AGENTS.md の中身 (例)
-  - Persona: 役割/優先順位 (例: セキュリティ優先、互換性維持)
-  - Tech Stack: 言語/フレームワーク/バージョン、依存関係の前提
-  - Operational Commands: ビルド/テスト/リントのコマンド
-  - Boundaries: 触れてはいけない領域、禁止事項 (secrets/破壊的変更)
-- Context Engineering (実務要点)
-  - 指示の置き場所を分散させず、**単一の規範 (AGENTS.md + Skills)** に集約
-  - 受け入れ基準 (DoD) と検証手段 (コマンド、CI ジョブ) を明記し、推論の迷走を減らす
-  - 背景: 長文コンテキストでは情報位置によって性能が落ちる (Lost in the Middle) ため、"重要情報を先頭/末尾に寄せる" 設計が効く ([arXiv][17])
-  - 対策: 会話ログに埋め込まず、仕様/チェックリスト/状態を **ファイルに外部化** して参照させる (必要なら要約＝compaction)
-  - "忘れる" 問題 (catastrophic forgetting) は古典的課題で、対策は外部化 (仕様/チェックリスト/状態管理) ([PubMed][18])
+- AGENTS.md: エージェント用 README（[agents.md][15]）
+- Agent Skills: 手順/規約をフォルダ化（VS Code）（[code.visualstudio.com][16]）
+- AGENTS.md に書くこと
+  - Persona / Tech stack
+  - Commands（build/test/lint）
+  - Boundaries（禁止/破壊的変更）
+- Context engineering
+  - 指示は 1 箇所に集約
+  - DoD と検証を明記
+  - 重要情報は先頭/末尾（[arXiv][17]）
+  - 仕様/状態はファイルで管理
+  - 忘却対策も外部化（[PubMed][18]）
 
 References:
 
@@ -182,15 +179,11 @@ References:
 
 ## Spec Kit
 
-- GitHub Spec Kit: Spec-Driven Development (SDD) を実装するためのツールキット (`specify` CLI、slash commands 等) ([GitHub][19])
-- "複数エージェント前提" の設計 (Copilot / Gemini CLI / Codex CLI などを明示的にサポート) ([GitHub][20])
-- 使い方の狙い: 要件→仕様→タスク→実装→検証、を **エージェントが辿れる形**に落とす (属人的プロンプトを減らす)
-- 4 フェーズのイメージ
-  - Specify: 曖昧さを質問で潰し、仕様 (Spec) を固める
-  - Plan: 技術設計/作業手順を作り、人間がレビューして承認する
-  - Task: 小さい単位に分割し、検証コマンドと紐づける
-  - Implement: タスクごとに実装→検証を回す
-- 補足: 交渉不可能なルール (例: 外部ライブラリ禁止、必須テスト) を "憲法" として別ファイル化すると強い
+- Spec Kit: SDD のツール（[GitHub][19]）
+- 複数エージェント対応（[GitHub][20]）
+- 要件→仕様→タスク→実装→検証を揃える
+- 4 フェーズ: Specify / Plan / Task / Implement
+- 交渉不可ルールは別ファイル化
 
 References:
 
@@ -198,12 +191,12 @@ References:
 
 ## Spec vs Plan?
 
-- Spec (仕様) : **永続・レビュー可能・CIで検証可能**な成果物 (例: 受け入れ基準、I/O、制約、非機能)
-- Plan (計画) : エージェントの作業手順 (揮発・状況依存) 。Plan は "仕様の代替" ではなく "仕様を実現するための手段"
-- 接続 (現場の最適解)
-  - SDD: Spec を先に固定し、Plan は短く回す (リトライ・改変に強い)
-  - AI-DLC: AI 主導で提案→人間が承認する、という開発ライフサイクル再設計 (方法論として明文化) ([Amazon Web Services, Inc.][21])
-  - Vibe Coding から脱却: 仕様と検証を先に置き、生成の揺らぎを吸収する
+- Spec: 永続で CI 検証できる
+- Plan: 手順（状況依存）
+- 使い分け
+  - Spec を先に固める（SDD）
+  - AI 提案→人間承認（AI-DLC）（[Amazon Web Services, Inc.][21]）
+  - 仕様 + 検証で揺らぎを吸収
 
 References:
 
@@ -212,17 +205,17 @@ References:
 
 ## AI coding + CI/CD
 
-- long-running tasks: エージェントが "作業を続ける" 前提で、CI は **途中成果を細かく検証** (lint→test→security→review)
-- parallel execution (Actions 側)
-  - matrix: 1 定義から複数ジョブを自動生成し、テスト/ビルドを並列化 ([GitHub Docs][22])
-  - concurrency: 同一グループの実行を抑制し、ムダな実行をキャンセル (`cancel-in-progress`) ([GitHub Docs][23])
-- ツールチェーン統合の到達点 (自律ループの例)
-  - 検知: zizmor 等が危険パターンを検知
-  - 参照: AGENTS.md / Spec を読み、制約を理解
-  - 実行: Coding Agent が修正 PR を作成
-  - 検証: Actions が必須チェックを実行 (Rulesets で強制)
-  - レビュー: Copilot for PRs + 人間が最終判断
-- parallel execution (AI 側の未来) : 複数エージェントを同時に走らせて比較/統合する "オーケストレーション" が前提に (Agent HQ / mission control) ([The GitHub Blog][24])
+- 長期タスクは段階検証（lint→test→security→review）
+- Actions 側の並列化
+  - matrix で並列（[GitHub Docs][22]）
+  - concurrency で重複抑止（[GitHub Docs][23]）
+- 自律ループ例
+  - 検知: zizmor
+  - 制約: AGENTS.md / Spec
+  - 実行: Agent が PR
+  - 検証: Actions + Rulesets
+  - 判断: Copilot for PRs + 人間
+- AI 側も並列化へ（Agent HQ）（[The GitHub Blog][24]）
 
 References:
 
@@ -232,14 +225,14 @@ References:
 
 ## Application to Business Process Outsourcing
 
-- BPO の「手順化された作業」を、Spec (要件/入力/出力/禁止事項) として定義し、AI+自動化で再現性を上げる
-- 典型ユースケース
-  - 定型レポート生成・集計: 入力データ→変換→検証→出力 (Actions で定期実行、差分は PR でレビュー)
-  - 運用手順書/ドキュメント整備: AGENTS.md/Skills にテンプレ化し、変更は Coding Agent に委譲
-  - ルール更新 (依存関係/セキュリティ) : Dependabot + 必須チェックで "自動提案→人間承認" の流れへ
-- ガバナンスの勘所
-  - 「何を自動承認してよいか」を Rulesets/環境保護で定義し、例外は人間が判断する
-  - コストは Premium Requests を可視化し、ROI が出る領域に集中投下する
+- BPO を Spec 化して自動化
+- 例
+  - 定型レポート: Actions 定期実行 + PR レビュー
+  - 手順書: AGENTS.md/Skills 化 + Agent 更新
+  - 依存/セキュリティ: Dependabot + 必須チェック
+- ガバナンス
+  - 自動承認範囲を Rulesets/環境で定義
+  - Premium を可視化し ROI に集中
 
 <!-- Reference-style links (not rendered) -->
 

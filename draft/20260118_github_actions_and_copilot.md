@@ -248,7 +248,7 @@ References:
       - `/speckit.specify` (+ `/speckit.clarify`) -> `specs/<feature>/spec.md` (requirements / user stories / acceptance criteria)
       - `/speckit.plan` -> `specs/<feature>/plan.md` + `research.md`/`data-model.md`/`contracts/`/`quickstart.md` など
       - `/speckit.tasks` -> `specs/<feature>/tasks.md` (依存関係/テスト/並列 `[P]` などを含む実行可能なタスクリスト)
-      - `/speckit.implement`  ->  `tasks.md` に沿って実装を進める
+      - `/speckit.implement` -> `tasks.md` に沿って実装を進める
   - Spec-driven Development vs Plan mode?
     - 形態: spec はリポジトリに残る成果物 (`spec.md`) / Plan は AI の動作モード (計画の生成・保存はできるが SOT ではない)
     - 役割: spec は「何を/何故」(要求・受け入れ基準) / Plan は「どう進める」(実装ステップ・未決事項の整理)

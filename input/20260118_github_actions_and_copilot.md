@@ -17,12 +17,12 @@
 
 ## Executive Summary
 
-- GitHub を使った CI/CD + AI coding
-  - GitHub Actions
-  - Dependabot
-  - GitHub Copilot
-- Spec-driven Development
-- 将来の展望
+- AI coding と CI/CD を組み合わせ、開発効率・品質を向上
+  - CI/CD: GitHub Actions + Dependabot
+  - AI coding: GitHub Copilot
+- コードの静的解析による誤設定・リスクの早期検出
+- AGENTS.md と Agent Skills による context engineering で出力品質を最適化
+- Spec Kit による Spec-driven Development (SDD) で仕様起点の開発プロセスを実現
 
 ## AI Coding with CI/CD
 
@@ -30,8 +30,8 @@
   - 確率論的な生成・推論による実装/修正/レビュー
 - CI/CD
   - 決定論的な自動化による修正・検証・デプロイ
-- AI coding と CI/CD で開発効率と品質を向上させる
-  - 利用できる GitHub サービス
+- AI coding と CI/CD で開発効率・品質を向上させる
+  - GitHub サービス:
     - GitHub Actions
     - Dependabot
     - GitHub Copilot
@@ -240,6 +240,7 @@ References:
 
 - Spec-driven Development (SDD)
   - 仕様 (Spec) を Source of Truth として扱い、コード生成・変更の起点を仕様に置く開発プロセス
+    - 推測作業や予期せぬ事態は減り、コードの品質は向上する
   - Spec Kit
     - GitHub が公開した SDD 用 OSS toolkit (`github/spec-kit`)
       - Specify CLI + テンプレ/ガードレールで spec/plan/tasks を生成
@@ -265,17 +266,20 @@ References:
 ## What's Next
 
 - 非同期・並列・自律的に長時間稼働
-  - Cursor での事例
-    - 数百の agent を単一のプロジェクトに同時投入し、週単位で自律実行
+  - [Cursor での事例](https://cursor.com/blog/scaling-agents)
+    - 数百の agent を同一コードベースに同時投入し、数週間スケールで自律的に開発を継続
     - 例:
-      - Web ブラウザ実装 (約 1 週間で 1M+ LoC / 1,000 files)
-      - Solid -> React 移行 (3 週間+)
-      - Rust 化で video rendering 25x
-    - 協調:
-      - フラットな自己調整 + lock はボトルネック/脆弱 -> planner/worker + judge の役割分離でスケール
-    - 運用:
-      - drift/tunnel vision 対策に periodic restart
-      - 完了イベントで planner が再計画する仕組みも課題
+      - Web ブラウザ実装: 約 1 週間で 1,000 files / 1M+ LoC
+      - Solid -> React 移行: 3 週間超 (追加 +266K / 削除 -193K LoC)
+      - video rendering の Rust 化: 25x 高速化
+      - (進行中) Java LSP / Windows 7 emulator / Excel など、数十万〜百万 LoC 規模の生成
+    - 協調の設計ポイント:
+      - 共有ファイル + lock による自己調整はボトルネックになりやすく、壊れやすい
+      - optimistic concurrency control (衝突したらリトライ) だけでは、難しいタスクが放置される (責任不在/リスク回避) 問題が残る
+      - planner (計画) / worker (実装) / judge (継続判断) を分離し、planning 自体も並列化/階層化してスケール
+    - 運用上の課題:
+      - drift (逸脱) / tunnel vision (視野狭窄) 対策として periodic fresh starts (定期的に新しい agent で再開)
+      - タスク完了に応じて planner を起こして再計画する仕組みが未成熟 (agent が走りすぎる問題等)
 - ソフトウェア開発以外への応用
   - AI-native SaaS
   - Business Process Automation

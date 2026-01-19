@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+html { background: #ffffff; }
+body {
+  width: 720pt;
+  height: 405pt;
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  background: #181B24;
+  padding: 25pt 50pt;
+}
+h1 {
+  color: #ffffff;
+  font-size: 32pt;
+  font-weight: bold;
+  margin: 0;
+}
+.content {
+  flex: 1;
+  padding: 25pt 50pt 50pt 50pt;
+}
+p {
+  color: #2C3E50;
+  font-size: 12pt;
+  line-height: 1.5;
+  margin: 0 0 10pt 0;
+}
+ul {
+  color: #2C3E50;
+  font-size: 12pt;
+  line-height: 1.6;
+  margin: 0;
+  padding-left: 20pt;
+}
+li {
+  margin-bottom: 7pt;
+}
+.highlight {
+  color: #2196F3;
+  font-weight: bold;
+}
+.code {
+  font-family: Courier New, monospace;
+  background: #F4F6F7;
+  padding: 2pt 6pt;
+  border-radius: 3pt;
+  color: #FF6B35;
+}
+.vs {
+  background: #F4F6F7;
+  padding: 10pt 12pt;
+  border-radius: 4pt;
+  margin-top: 10pt;
+  border-left: 4pt solid #FF6B35;
+}
+.vs p {
+  margin: 0 0 6pt 0;
+  font-size: 11pt;
+}
+.vs ul {
+  font-size: 10pt;
+  margin: 0;
+}
+.vs li {
+  margin-bottom: 2pt;
+}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>Spec-driven Development</h1>
+</div>
+<div class="content">
+<p><b>仕様 (Spec) を Source of Truth として扱い、コード生成・変更の起点を仕様に置く開発プロセス</b></p>
+<ul>
+<li><span class="highlight">Spec Kit</span> - GitHub が公開した SDD 用 OSS toolkit (<span class="code">github/spec-kit</span>)
+<ul style="font-size: 10pt; margin-top: 3pt; line-height: 1.5;">
+<li><span class="code">/speckit.specify</span> → specs/&lt;feature&gt;/spec.md</li>
+<li><span class="code">/speckit.plan</span> → plan.md + research.md / data-model.md など</li>
+<li><span class="code">/speckit.tasks</span> → tasks.md (実行可能なタスクリスト)</li>
+<li><span class="code">/speckit.implement</span> → 実装を進める</li>
+</ul>
+</li>
+</ul>
+<div class="vs">
+<p><b>Spec-driven Development vs Plan mode</b></p>
+<ul>
+<li>Spec: リポジトリに残る成果物 / Plan: AI の動作モード</li>
+<li>Spec: 「何を/何故」/ Plan: 「どう進める」</li>
+<li>Spec を起点に plan/tasks を派生</li>
+</ul>
+</div>
+</div>
+</body>
+</html>

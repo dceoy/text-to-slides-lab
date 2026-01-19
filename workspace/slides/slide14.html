@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+html { background: #ffffff; }
+body {
+  width: 720pt;
+  height: 405pt;
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  background: #181B24;
+  padding: 25pt 50pt;
+}
+h1 {
+  color: #ffffff;
+  font-size: 32pt;
+  font-weight: bold;
+  margin: 0;
+}
+.content {
+  flex: 1;
+  padding: 25pt 50pt 50pt 50pt;
+}
+h2 {
+  color: #2196F3;
+  font-size: 14pt;
+  font-weight: bold;
+  margin: 0 0 6pt 0;
+}
+p {
+  color: #2C3E50;
+  font-size: 11pt;
+  line-height: 1.5;
+  margin: 0 0 8pt 0;
+}
+ul {
+  color: #2C3E50;
+  font-size: 11pt;
+  line-height: 1.6;
+  margin: 0 0 10pt 20pt;
+  padding-left: 0;
+}
+li {
+  margin-bottom: 4pt;
+}
+.example {
+  font-size: 10pt;
+  color: #5A6C7D;
+}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>What's Next</h1>
+</div>
+<div class="content">
+<h2>非同期・並列・自律的に長時間稼働</h2>
+<p><b>Cursor での事例:</b> 数百の agent を同一コードベースに同時投入し、数週間スケールで自律的に開発を継続</p>
+<ul>
+<li class="example">Web ブラウザ実装: 約 1 週間で 1,000 files / 1M+ LoC</li>
+<li class="example">Solid → React 移行: 3 週間超 (+266K / -193K LoC)</li>
+<li class="example">video rendering の Rust 化: 25x 高速化</li>
+</ul>
+<p><b>協調設計:</b> planner (計画) / worker (実装) / judge (継続判断) を分離し、planning 自体も並列化/階層化</p>
+<h2 style="margin-top: 10pt;">ソフトウェア開発以外への応用</h2>
+<ul>
+<li>AI-native SaaS</li>
+<li>Business Process Automation</li>
+<li>Physical AI / Embodied AI</li>
+</ul>
+</div>
+</body>
+</html>

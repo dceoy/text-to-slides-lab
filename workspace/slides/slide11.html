@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+html { background: #ffffff; }
+body {
+  width: 720pt;
+  height: 405pt;
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  background: #181B24;
+  padding: 25pt 50pt;
+}
+h1 {
+  color: #ffffff;
+  font-size: 28pt;
+  font-weight: bold;
+  margin: 0;
+}
+.content {
+  flex: 1;
+  padding: 30pt 50pt;
+}
+p {
+  color: #2C3E50;
+  font-size: 14pt;
+  line-height: 1.6;
+  margin: 0 0 18pt 0;
+}
+ul {
+  color: #2C3E50;
+  font-size: 13pt;
+  line-height: 1.7;
+  margin: 0;
+  padding-left: 20pt;
+}
+li {
+  margin-bottom: 10pt;
+}
+.highlight {
+  color: #2196F3;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>GitHub Copilot Coding Agent</h1>
+</div>
+<div class="content">
+<p><b>GitHub 上で動く自律型 coding agent</b></p>
+<ul>
+<li><span class="highlight">機能:</span> 指示に基づき実装/修正し、PR を作成/更新してレビュー依頼まで自動化
+<ul style="font-size: 12pt; margin-top: 5pt;">
+<li>PR コメントで @copilot をメンションして反復修正を依頼</li>
+<li>1 タスク 1 PR、同一リポジトリ内のみ</li>
+</ul>
+</li>
+<li><span class="highlight">実行環境:</span> GitHub Actions を利用して独自のエフェメラル開発環境</li>
+<li><span class="highlight">観測性:</span> セッションログで進捗/実行内容/検証結果を追跡</li>
+<li><span class="highlight">統制:</span> 起動/フィードバックは write 権限ユーザのみ、push は copilot/ ブランチのみ</li>
+<li><span class="highlight">類似:</span> Anthropic Claude や OpenAI Codex にも似た機能がある</li>
+</ul>
+</div>
+</body>
+</html>

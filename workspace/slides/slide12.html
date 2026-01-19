@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+html { background: #ffffff; }
+body {
+  width: 720pt;
+  height: 405pt;
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  background: #181B24;
+  padding: 25pt 50pt;
+}
+h1 {
+  color: #ffffff;
+  font-size: 26pt;
+  font-weight: bold;
+  margin: 0;
+}
+.content {
+  flex: 1;
+  padding: 20pt 50pt 50pt 50pt;
+}
+p {
+  color: #2C3E50;
+  font-size: 12pt;
+  line-height: 1.5;
+  margin: 0 0 10pt 0;
+}
+ul {
+  color: #2C3E50;
+  font-size: 11pt;
+  line-height: 1.6;
+  margin: 0;
+  padding-left: 20pt;
+}
+li {
+  margin-bottom: 6pt;
+}
+.highlight {
+  color: #2196F3;
+  font-weight: bold;
+}
+.code {
+  font-family: Courier New, monospace;
+  background: #F4F6F7;
+  padding: 2pt 6pt;
+  border-radius: 3pt;
+  color: #FF6B35;
+}
+.section {
+  margin-bottom: 10pt;
+}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>Context engineering for GitHub Copilot</h1>
+</div>
+<div class="content">
+<div class="section">
+<p><b>LLM に渡す指示・根拠知識・状態・制約・ツール定義を設計/生成/配信して出力品質を最適化</b></p>
+<ul style="margin: 8pt 0 0 20pt; font-size: 11pt;">
+<li>context window に入らない情報は忘れられる</li>
+<li>Lost in the middle: context の中間付近にある情報は参照されにくい</li>
+<li>LLM は固定された pre-trained model であり、実務レベルの調整は prompt/context に依存</li>
+</ul>
+</div>
+<div class="section">
+<p><b>GitHub Copilot での実践</b></p>
+<ul>
+<li><span class="highlight">AGENTS.md</span> - Agent 向けの instructions ファイル (Markdown)
+<ul style="font-size: 11pt; margin-top: 3pt;">
+<li>階層配置でき、最も近いファイルが適用 (サブディレクトリで上書き)</li>
+</ul>
+</li>
+<li><span class="highlight">Agent Skills</span> - タスク特化の手順・判断基準等をパッケージ化し、context へ注入
+<ul style="font-size: 11pt; margin-top: 3pt;">
+<li>置き場所: <span class="code">.github/skills/&lt;skill&gt;/SKILL.md</span></li>
+</ul>
+</li>
+<li><span class="highlight">MCP server</span> - agent から外部の tools/resources/prompts を呼び出す標準プロトコル</li>
+</ul>
+</div>
+</div>
+</body>
+</html>

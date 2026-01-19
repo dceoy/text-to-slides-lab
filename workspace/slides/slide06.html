@@ -1,81 +1,92 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-<style>
-html { background: #ffffff; }
-body {
-  width: 720pt;
-  height: 405pt;
-  margin: 0;
-  padding: 0;
-  background: #ffffff;
-  font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-}
-.header {
-  background: #181B24;
-  padding: 25pt 50pt;
-}
-h1 {
-  color: #ffffff;
-  font-size: 28pt;
-  font-weight: bold;
-  margin: 0;
-}
-.content {
-  flex: 1;
-  padding: 30pt 50pt;
-}
-p {
-  color: #2C3E50;
-  font-size: 14pt;
-  line-height: 1.6;
-  margin: 0 0 18pt 0;
-}
-ul {
-  color: #2C3E50;
-  font-size: 13pt;
-  line-height: 1.7;
-  margin: 0;
-  padding-left: 20pt;
-}
-li {
-  margin-bottom: 10pt;
-}
-.highlight {
-  color: #2196F3;
-  font-weight: bold;
-}
-.code {
-  font-family: Courier New, monospace;
-  background: #F4F6F7;
-  padding: 2pt 6pt;
-  border-radius: 3pt;
-  color: #FF6B35;
-}
-</style>
-</head>
-<body>
-<div class="header">
-<h1>GitHub Actions Reusable Workflows</h1>
-</div>
-<div class="content">
-<p><b>Workflow の共通化/標準化 (DRY) → 再利用</b></p>
-<ul>
-<li><span class="highlight">定義:</span> <span class="code">on: workflow_call</span> を宣言
-<ul style="font-size: 12pt; margin-top: 5pt;">
-<li>inputs / secrets / outputs でインターフェースを固定</li>
-</ul>
-</li>
-<li><span class="highlight">呼び出し:</span> <span class="code">jobs.&lt;job_id&gt;.uses</span> で呼ぶ
-<ul style="font-size: 12pt; margin-top: 5pt;">
-<li>{owner}/{repo}/.github/workflows/{file}@{ref}</li>
-<li>@ref は commit SHA pin 推奨 (安定性/サプライチェーン対策)</li>
-</ul>
-</li>
-<li><span class="highlight">使い分け:</span> reusable workflow は "job/複数 job" の再利用、composite action は "step" の再利用</li>
-</ul>
-</div>
-</body>
+  <head>
+    <style>
+      html {
+        background: #ffffff;
+      }
+      body {
+        width: 720pt;
+        height: 405pt;
+        margin: 0;
+        padding: 0;
+        background: #ffffff;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+      }
+      .header {
+        background: #1a237e;
+        padding: 25pt 50pt;
+      }
+      h1 {
+        color: #ffffff;
+        font-size: 28pt;
+        font-weight: bold;
+        margin: 0;
+      }
+      .content {
+        flex: 1;
+        padding: 30pt 50pt;
+      }
+      p {
+        color: #263238;
+        font-size: 14pt;
+        line-height: 1.6;
+        margin: 0 0 18pt 0;
+      }
+      ul {
+        color: #263238;
+        font-size: 13pt;
+        line-height: 1.7;
+        margin: 0;
+        padding-left: 20pt;
+      }
+      li {
+        margin-bottom: 10pt;
+      }
+      .highlight {
+        color: #26c6da;
+        font-weight: bold;
+      }
+      .code {
+        font-family:
+          Courier New,
+          monospace;
+        background: #f4f6f7;
+        padding: 2pt 6pt;
+        border-radius: 3pt;
+        color: #5e35b1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>GitHub Actions Reusable Workflows</h1>
+    </div>
+    <div class="content">
+      <p><b>Workflow の共通化/標準化 (DRY) → 再利用</b></p>
+      <ul>
+        <li>
+          <span class="highlight">定義:</span>
+          <span class="code">on: workflow_call</span> を宣言
+          <ul style="font-size: 12pt; margin-top: 5pt">
+            <li>inputs / secrets / outputs でインターフェースを固定</li>
+          </ul>
+        </li>
+        <li>
+          <span class="highlight">呼び出し:</span>
+          <span class="code">jobs.&lt;job_id&gt;.uses</span> で呼ぶ
+          <ul style="font-size: 12pt; margin-top: 5pt">
+            <li>{owner}/{repo}/.github/workflows/{file}@{ref}</li>
+            <li>@ref は commit SHA pin 推奨 (安定性/サプライチェーン対策)</li>
+          </ul>
+        </li>
+        <li>
+          <span class="highlight">使い分け:</span> reusable workflow は
+          "job/複数 job" の再利用、composite action は "step" の再利用
+        </li>
+      </ul>
+    </div>
+  </body>
 </html>

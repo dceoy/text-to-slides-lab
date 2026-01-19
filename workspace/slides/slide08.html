@@ -1,68 +1,88 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-<style>
-html { background: #ffffff; }
-body {
-  width: 720pt;
-  height: 405pt;
-  margin: 0;
-  padding: 0;
-  background: #ffffff;
-  font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-}
-.header {
-  background: #181B24;
-  padding: 25pt 50pt;
-}
-h1 {
-  color: #ffffff;
-  font-size: 32pt;
-  font-weight: bold;
-  margin: 0;
-}
-.content {
-  flex: 1;
-  padding: 30pt 50pt;
-}
-p {
-  color: #2C3E50;
-  font-size: 14pt;
-  line-height: 1.6;
-  margin: 0 0 18pt 0;
-}
-ul {
-  color: #2C3E50;
-  font-size: 13pt;
-  line-height: 1.7;
-  margin: 0;
-  padding-left: 20pt;
-}
-li {
-  margin-bottom: 10pt;
-}
-.highlight {
-  color: #2196F3;
-  font-weight: bold;
-}
-</style>
-</head>
-<body>
-<div class="header">
-<h1>Dependabot Alerts</h1>
-</div>
-<div class="content">
-<p><b>依存関係の既知の脆弱性を検知し、更新/対応を促す</b></p>
-<ul>
-<li><span class="highlight">検知:</span> default branch をスキャンし、GitHub Advisory Database と dependency graph を突合</li>
-<li><span class="highlight">表示:</span> repo の Security tab / dependency graph</li>
-<li><span class="highlight">アラート内容:</span> 影響ファイルへのリンク、脆弱性詳細と severity、修正版情報</li>
-<li><span class="highlight">対応:</span> Dependabot security updates の PR 作成 (有効時) / 手動更新、または理由付き dismiss・reopen</li>
-<li><span class="highlight">通知:</span> public repo はデフォルト有効、private repo は有効化が必要</li>
-<li><span class="highlight">注意:</span> archived repo は対象外、GitHub Actions は semver tag のみ対象</li>
-</ul>
-</div>
-</body>
+  <head>
+    <style>
+      html {
+        background: #ffffff;
+      }
+      body {
+        width: 720pt;
+        height: 405pt;
+        margin: 0;
+        padding: 0;
+        background: #ffffff;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+      }
+      .header {
+        background: #1a237e;
+        padding: 25pt 50pt;
+      }
+      h1 {
+        color: #ffffff;
+        font-size: 32pt;
+        font-weight: bold;
+        margin: 0;
+      }
+      .content {
+        flex: 1;
+        padding: 30pt 50pt;
+      }
+      p {
+        color: #263238;
+        font-size: 14pt;
+        line-height: 1.6;
+        margin: 0 0 18pt 0;
+      }
+      ul {
+        color: #263238;
+        font-size: 13pt;
+        line-height: 1.7;
+        margin: 0;
+        padding-left: 20pt;
+      }
+      li {
+        margin-bottom: 10pt;
+      }
+      .highlight {
+        color: #26c6da;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Dependabot Alerts</h1>
+    </div>
+    <div class="content">
+      <p><b>依存関係の既知の脆弱性を検知し、更新/対応を促す</b></p>
+      <ul>
+        <li>
+          <span class="highlight">検知:</span> default branch
+          をスキャンし、GitHub Advisory Database と dependency graph を突合
+        </li>
+        <li>
+          <span class="highlight">表示:</span> repo の Security tab / dependency
+          graph
+        </li>
+        <li>
+          <span class="highlight">アラート内容:</span>
+          影響ファイルへのリンク、脆弱性詳細と severity、修正版情報
+        </li>
+        <li>
+          <span class="highlight">対応:</span> Dependabot security updates の PR
+          作成 (有効時) / 手動更新、または理由付き dismiss・reopen
+        </li>
+        <li>
+          <span class="highlight">通知:</span> public repo
+          はデフォルト有効、private repo は有効化が必要
+        </li>
+        <li>
+          <span class="highlight">注意:</span> archived repo は対象外、GitHub
+          Actions は semver tag のみ対象
+        </li>
+      </ul>
+    </div>
+  </body>
 </html>

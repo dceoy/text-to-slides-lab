@@ -11,12 +11,9 @@
 - [Static analysis for GitHub Actions and Dependabot](#static-analysis-for-github-actions-and-dependabot)
 - [GitHub Copilot](#github-copilot)
 - [GitHub Copilot Coding Agent](#github-copilot-coding-agent)
-- [AGENTS.md & Agent Skills](#agentsmd--agent-skills)
-- [Spec Kit](#spec-kit)
-- [Spec vs Plan?](#spec-vs-plan)
-- [AI coding + CI/CD](#ai-coding--cicd)
-- [GitHub Agent HQ](#github-agent-hq)
-- [Application to Business Process Outsourcing](#application-to-business-process-outsourcing)
+- [Context engineering for GitHub Copilot](#context-engineering-for-github-copilot)
+- [Spec-driven Development](#spec-driven-development)
+- [What's Next](#whats-next)
 
 ## Executive Summary
 
@@ -24,13 +21,8 @@
   - GitHub Actions
   - Dependabot
   - GitHub Copilot
-- この先の AI coding agents
-  - 自律的に長時間稼働
-  - 非同期・並列実行
-- 開発生産性向上の先
-  - Business Process Automation
-    - AI-native SaaS
-    - Ontology Building
+- Spec-driven Development
+- 将来の展望
 
 ## AI Coding with CI/CD
 
@@ -71,9 +63,9 @@ References:
 ## GitHub Actions Reusable Workflows
 
 - 再利用可能な GitHub Actions workflows
-  - 目的: workflow の共通化/標準化 (DRY) -> 再利用
+  - 概要: workflow の共通化/標準化 (DRY) -> 再利用
   - 定義: `.github/workflows/*.yml` に置き、`on: workflow_call` を宣言
-    - `inputs`/`secrets`/`outputs` で I/F を固定 (input type は `boolean`/`number`/`string`)
+    - `inputs`/`secrets`/`outputs` でインターフェースを固定 (input type は `boolean`/`number`/`string`)
   - 呼び出し: job から `jobs.<job_id>.uses` で呼ぶ
     - `{owner}/{repo}/.github/workflows/{file}@{ref}` / `./.github/workflows/{file}`
     - `with:` で inputs、`secrets:` で secrets、`secrets: inherit` で同一 org/enterprise の secrets を継承
@@ -91,7 +83,7 @@ References:
 ## Dependabot Pull Request
 
 - 依存関係の更新自動化
-  - 目的: 依存関係の更新を pull request (PR) として自動提案し、CI で検証して安全にマージ
+  - 概要: 依存関係の更新を pull request (PR) として自動提案し、CI で検証して安全にマージ
     - Version updates: 定期実行で新バージョンを検知し、更新 PR を作成
     - Security updates: 脆弱性アラートに紐づく修正 PR を作成
   - 設定: `.github/dependabot.yml` で ecosystem / directory / schedule を定義
@@ -110,7 +102,7 @@ References:
 ## Dependabot Alerts
 
 - 依存関係の脆弱性アラート
-  - 目的: 依存関係の既知の脆弱性を検知し、更新/対応を促す (SCA)
+  - 概要: 依存関係の既知の脆弱性を検知し、更新/対応を促す
   - 検知: default branch をスキャンし、GitHub Advisory Database と dependency graph を突合
     - e.g., Advisory Database に新規脆弱性が追加 / dependency graph が更新
   - 表示: repo の Security tab / dependency graph
@@ -131,22 +123,19 @@ References:
 ## Static analysis for GitHub Actions and Dependabot
 
 - GitHub Actions の静的解析
-  - 目的: 誤設定/セキュリティリスクを検出
+  - 概要: 誤設定/セキュリティリスクを検出
     - リスク: supply chain attack や command injection 等
   - 静的解析ツール
-    - lint
-      - actionlint
-        - GitHub Actions lint + shellcheck + pyflakes
-    - security scan
-      - zizmor
-        - security scan for GitHub Actions
-      - checkov
-        - Software Composition Analysis (SCA) scan for IaC
-      - trivy
-        - Security scan and SBOM generation for IaC
-    - SHA pinning
-      - pinact / ratchet
-        - SHA pin conversion for GitHub Actions
+    - actionlint
+      - GitHub Actions lint + shellcheck + pyflakes
+    - zizmor
+      - security scan for GitHub Actions
+    - checkov
+      - Software Composition Analysis (SCA) scan for IaC
+    - trivy
+      - Security scan and SBOM generation for IaC
+    - pinact / ratchet
+      - SHA pinning for GitHub Actions
 
 References:
 
@@ -159,14 +148,21 @@ References:
 
 ## GitHub Copilot
 
-- AI による開発支援 (補完/チャット/レビュー/自動編集)
-  - Inline suggestions: エディタ上でコード補完
-  - Copilot Chat: コードの説明・修正提案・テスト生成などを対話で支援
-  - Copilot Edits: 指示に沿って複数ファイルの変更案を作成 (Edit / Agent mode)
-  - Copilot in GitHub.com: PR summaries などでレビュー/把握を補助
-  - Copilot code review: 変更差分へのフィードバックを生成
-  - Copilot pull request summaries: PR の要約を自動生成
-  - Custom instructions: コーディング規約/方針を指示に組み込み
+- 複数のモデルに対応した AI 開発支援
+  - 機能:
+    - Inline suggestions: エディタ上でコード補完
+    - Copilot Chat: コードの説明・修正提案・テスト生成などを対話で支援
+    - Copilot coding agent: issue を割り当てて自律的に実装/修正/PR 作成
+    - Copilot CLI: ターミナルでの質問応答・コード生成・修正提案
+    - Copilot code review: 変更差分へのフィードバックを生成
+    - Copilot pull request summaries: PR の要約を自動生成
+    - Copilot text completion: PR 説明文のテキスト補完
+    - Copilot Edits: 指示に沿って複数ファイルの変更案を作成 (Edit / Agent mode)
+    - Copilot custom instructions: コーディング規約/方針を指示に組み込み
+    - Copilot Memory: リポジトリ情報を記憶して出力品質を向上
+    - Copilot in GitHub Desktop: GitHub Desktop 上で commit message や説明の生成
+    - Copilot Spaces: コード、ドキュメント等のコンテンツを整理して context を改善
+    - GitHub Spark: 自然言語プロンプトでフルスタックアプリを構築・デプロイ
   - Premium requests: AI モデルや機能毎に消費されるリクエスト枠
     - Copilot Chat / Copilot CLI ではプロンプト毎にカウント
 
@@ -180,105 +176,111 @@ References:
 
 ## GitHub Copilot Coding Agent
 
-- PR を作り、レビューを依頼 ([GitHub Docs][13])
-- 使いどころ
-  - 小〜中変更を PR で受ける
-  - コメントで差分指示 ([GitHub Docs][14])
-- コツ
-  - DoD と検証コマンドを明示
-  - 境界を AGENTS.md に書く
+- GitHub 上で動く自律型 coding agent
+  - 機能:
+    - 指示に基づき実装/修正し、PR を作成/更新してレビュー依頼まで自動化
+    - PR コメントで `@copilot` をメンションして反復修正を依頼
+    - 1 タスク 1 PR、同一リポジトリ内のみ
+  - 実行環境: GitHub Actions を利用して独自のエフェメラル開発環境
+  - 観測性: セッションログで進捗/実行内容/検証結果 (セキュリティ検知含む) を追跡
+  - 統制/セキュリティ:
+    - 起動/フィードバックは write 権限ユーザのみ
+    - push は `copilot/` ブランチのみ (`main`/`master` へは push しない)
+    - Actions workflows は自動実行されず、レビュー後に `Approve and run workflows` が必要
+  - UI は違うが Anthropic Claude や OpenAI Codex にも似た機能がある
+  - 将来的には Agent HQ でサードパーティ製 coding agents を使えるようになる ?
 
 References:
 
 - [https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-coding-agent](https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-coding-agent)
-- [https://docs.github.com/copilot/using-github-copilot/coding-agent/asking-copilot-to-create-a-pull-request](https://docs.github.com/copilot/using-github-copilot/coding-agent/asking-copilot-to-create-a-pull-request)
+- [https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/create-a-pr](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/create-a-pr)
+- [https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/track-copilot-sessions](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/track-copilot-sessions)
+- [https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/review-copilot-prs](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/review-copilot-prs)
+- [https://github.blog/news-insights/company-news/welcome-home-agents/](https://github.blog/news-insights/company-news/welcome-home-agents/)
 
-## AGENTS.md & Agent Skills
+## Context engineering for GitHub Copilot
 
-- AGENTS.md: エージェント用 README ([agents.md][15])
-- Agent Skills: 手順/規約をフォルダ化 (VS Code) ([code.visualstudio.com][16])
-- AGENTS.md に書くこと
-  - Persona / Tech stack
-  - Commands (build/test/lint)
-  - Boundaries (禁止/破壊的変更)
 - Context engineering
-  - 指示は 1 箇所に集約
-  - DoD と検証を明記
-  - 重要情報は先頭/末尾 ([arXiv][17])
-  - 仕様/状態はファイルで管理
-  - 忘却対策も外部化 ([PubMed][18])
+  - LLM に渡す指示・根拠知識・状態・制約・ツール定義を設計/生成/配信して出力品質を最適化
+    - context window に入らない情報は忘れられる
+    - Lost in the middle: context の中間付近にある情報は参照されにくい
+    - context の圧縮や外部化が重要
+  - LLM は固定された pre-trained model であり、実務レベルの調整は prompt/context に依存
+    - fine-tuning はコスト高・汎用性低・更新困難で非現実的な選択肢になりつつある
+  - GitHub Copilot での実践
+    - AGENTS.md
+      - Agent 向けの instructions ファイル (Markdown)
+      - 階層配置でき、最も近いファイルが適用 (サブディレクトリで上書き)
+      - Copilot Chat / coding agent / Copilot CLI の Agent instructions (`AGENTS.md` / `CLAUDE.md` / `GEMINI.md`)
+    - Agent Skills
+      - タスク特化の手順・判断基準・スクリプト等をスキルとしてパッケージ化し、必要時に context へ注入
+      - 置き場所: `.github/skills/<skill>/SKILL.md` または `.claude/skills/<skill>/SKILL.md`
+      - 個人用: `~/.copilot/skills` または `~/.claude/skills` (coding agent / Copilot CLI のみ)
+      - `SKILL.md` は YAML frontmatter (`name` / `description` 等) + 本文で定義し、Copilot が自動選択
+    - MCP server
+      - Model Context Protocol: agent から外部の tools/resources/prompts を呼び出すための標準プロトコル
+      - ローカルまたはリモートに立てた MCP server に接続して使用
+      - Agent Skills より context 消費が大きくなりやすいので注意
+  - Claude Code では subagents という機能もあるがまだ標準化されていない
 
 References:
 
-- [https://agents.md/](https://agents.md/)
-- [https://code.visualstudio.com/docs/copilot/customization/agent-skills](https://code.visualstudio.com/docs/copilot/customization/agent-skills)
+- [https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
 - [https://arxiv.org/abs/2307.03172](https://arxiv.org/abs/2307.03172)
+- [https://agents.md/](https://agents.md/)
+- [https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview)
+- [https://code.visualstudio.com/docs/copilot/customization/agent-skills](https://code.visualstudio.com/docs/copilot/customization/agent-skills)
+- [https://docs.github.com/en/copilot/reference/custom-instructions-support](https://docs.github.com/en/copilot/reference/custom-instructions-support)
+- [https://docs.github.com/en/copilot/concepts/agents/about-agent-skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills)
+- [https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/extend-coding-agent-with-mcp](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/extend-coding-agent-with-mcp)
+- [https://modelcontextprotocol.io/specification/latest](https://modelcontextprotocol.io/specification/latest)
+- [https://code.visualstudio.com/api/extension-guides/ai/mcp](https://code.visualstudio.com/api/extension-guides/ai/mcp)
 
-## Spec Kit
+## Spec-driven Development
 
-- Spec Kit: SDD のツール ([GitHub][19])
-- 複数エージェント対応 ([GitHub][20])
-- 要件→仕様→タスク→実装→検証を揃える
-- 4 フェーズ: Specify / Plan / Task / Implement
-- 交渉不可ルールは別ファイル化
+- Spec-driven Development (SDD)
+  - 仕様 (Spec) を Source of Truth として扱い、コード生成・変更の起点を仕様に置く開発プロセス
+  - Spec Kit
+    - GitHub が公開した SDD 用 OSS toolkit (`github/spec-kit`)
+      - Specify CLI + テンプレ/ガードレールで spec/plan/tasks を生成
+      - `.specify/` に constitution とテンプレを配置し、以後の判断基準を固定 (`.specify/memory/constitution.md`)
+      - `/speckit.specify` (+ `/speckit.clarify`) -> `specs/<feature>/spec.md` (requirements / user stories / acceptance criteria)
+      - `/speckit.plan` -> `specs/<feature>/plan.md` + `research.md`/`data-model.md`/`contracts/`/`quickstart.md` など
+      - `/speckit.tasks` -> `specs/<feature>/tasks.md` (依存関係/テスト/並列 `[P]` などを含む実行可能なタスクリスト)
+      - `/speckit.implement`  ->  `tasks.md` に沿って実装を進める
+  - Spec-driven Development vs Plan mode?
+    - 形態: spec はリポジトリに残る成果物 (`spec.md`) / Plan は AI の動作モード (計画の生成・保存はできるが SOT ではない)
+    - 役割: spec は「何を/何故」(要求・受け入れ基準) / Plan は「どう進める」(実装ステップ・未決事項の整理)
+    - 粒度: spec はプロダクト/機能仕様 (レビュー対象) / Plan は特定変更の作業計画 (実行・分割が目的)
+    - 位置付け: spec を起点に plan/tasks を派生 / Plan は "計画 -> 承認 -> 実装" を支援するが artifacts の体系化は必須ではない
 
 References:
 
+- [https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/](https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/)
 - [https://github.com/github/spec-kit](https://github.com/github/spec-kit)
+- [https://github.github.io/spec-kit/](https://github.github.io/spec-kit/)
+- [https://docs.github.com/en/copilot/using-github-copilot/asking-github-copilot-questions-in-your-ide](https://docs.github.com/en/copilot/using-github-copilot/asking-github-copilot-questions-in-your-ide)
+- [https://code.visualstudio.com/docs/copilot/chat/chat-planning](https://code.visualstudio.com/docs/copilot/chat/chat-planning)
 
-## Spec vs Plan?
+## What's Next
 
-- Spec: 永続で CI 検証できる
-- Plan: 手順 (状況依存)
-- 使い分け
-  - Spec を先に固める (SDD)
-  - AI 提案→人間承認 (AI-DLC) ([Amazon Web Services, Inc.][21])
-  - 仕様 + 検証で揺らぎを吸収
-
-References:
-
-- [https://github.com/github/spec-kit](https://github.com/github/spec-kit)
-- [https://aws.amazon.com/jp/blogs/news/ai-driven-development-life-cycle/](https://aws.amazon.com/jp/blogs/news/ai-driven-development-life-cycle/)
-
-## AI coding + CI/CD
-
-- 長期タスクは段階検証 (lint→test→security→review)
-- Actions 側の並列化
-  - matrix で並列 ([GitHub Docs][22])
-  - concurrency で重複抑止 ([GitHub Docs][23])
-- 自律ループ例
-  - 検知: zizmor
-  - 制約: AGENTS.md / Spec
-  - 実行: Agent が PR
-  - 検証: Actions + Rulesets
-  - 判断: Copilot for PRs + 人間
-- AI 側も並列化へ (Agent HQ) ([The GitHub Blog][24])
+- 非同期・並列・自律的に長時間稼働
+  - Cursor での事例
+    - 数百の agent を単一のプロジェクトに同時投入し、週単位で自律実行
+    - 例:
+      - Web ブラウザ実装 (約 1 週間で 1M+ LoC / 1,000 files)
+      - Solid -> React 移行 (3 週間+)
+      - Rust 化で video rendering 25x
+    - 協調:
+      - フラットな自己調整 + lock はボトルネック/脆弱 -> planner/worker + judge の役割分離でスケール
+    - 運用:
+      - drift/tunnel vision 対策に periodic restart
+      - 完了イベントで planner が再計画する仕組みも課題
+- ソフトウェア開発以外への応用
+  - AI-native SaaS
+  - Business Process Automation
+  - Physical AI / Embodied AI
 
 References:
 
-- [https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/running-variations-of-jobs-in-a-workflow](https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/running-variations-of-jobs-in-a-workflow)
-- [https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/control-the-concurrency-of-workflows-and-jobs](https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/control-the-concurrency-of-workflows-and-jobs)
-- [https://github.blog/news-insights/company-news/welcome-home-agents/](https://github.blog/news-insights/company-news/welcome-home-agents/)
-
-## GitHub Agent HQ
-
-- 複数エージェントを統合管理 (Agent HQ)
-- Mission control: 割当/介入/ログ/レビュー
-- サードパーティも統合へ
-- Custom agents を共有
-- Plan Mode で手順を可視化
-
-References:
-
-- [https://github.blog/news-insights/company-news/welcome-home-agents/](https://github.blog/news-insights/company-news/welcome-home-agents/)
-
-## Application to Business Process Outsourcing
-
-- BPO を Spec 化して自動化
-- 例
-  - 定型レポート: Actions 定期実行 + PR レビュー
-  - 手順書: AGENTS.md/Skills 化 + Agent 更新
-  - 依存/セキュリティ: Dependabot + 必須チェック
-- ガバナンス
-  - 自動承認範囲を Rulesets/環境で定義
-  - Premium を可視化し ROI に集中
+- [https://cursor.com/blog/scaling-agents](https://cursor.com/blog/scaling-agents)

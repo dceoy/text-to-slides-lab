@@ -40,8 +40,8 @@
 
 - GitHub リポジトリ内でワークフローを自動化する CI/CD プラットフォーム
   - Workflow: `.github/workflows/*.yml` に定義 (YAML)
-  - Trigger: `push` / `pull_request` / `workflow_dispatch` / `schedule` など
-  - Job/Step/Action: job を runner 上で実行し、Marketplace などの action を組み合わせる
+  - Trigger: `push` / `pull_request` / `workflow_dispatch` / `schedule` / etc.
+  - Job/Step/Action: job を runner 上で実行し、Marketplace 等の action を組み合わせる
   - Runner: GitHub-hosted runners / self-hosted runners を選べる
   - データ共有: artifacts (成果物) / cache (依存キャッシュ) で高速化・受け渡し
   - Secrets: secret を暗号化して管理し、必要な範囲だけに渡す
@@ -125,11 +125,11 @@ References:
 - GitHub Actions の静的解析
   - 概要: 誤設定/セキュリティリスクを検出
     - リスク: supply chain attack や command injection 等
-  - 静的解析ツール
+  - 静的解析ツール:
     - actionlint
       - GitHub Actions lint + shellcheck + pyflakes
     - zizmor
-      - security scan for GitHub Actions
+      - Security scan for GitHub Actions
     - checkov
       - Software Composition Analysis (SCA) scan for IaC
     - trivy

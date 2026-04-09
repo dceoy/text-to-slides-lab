@@ -160,9 +160,8 @@ dist-ssr
 *.sln
 *.sw?
 
-# AI agent files
-.serena/
-.claude/settings.local.json
-
 # Python virtual environment
 .venv/
+
+# Marp community themes
+marp-community-themes/

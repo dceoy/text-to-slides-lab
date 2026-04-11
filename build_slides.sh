@@ -7,14 +7,14 @@ if [[ "${#}" -ne 1 ]]; then
   exit 1
 fi
 
-SCRIPT_DIR_PATH="$(dirname "${0}")"
+SCRIPT_DIR_PATH="$(dirname "${0}" | xargs realpath)"
 INPUT_MD_PATH="${1}"
 THEMES_DIR_PATH="${SCRIPT_DIR_PATH}/marp-community-themes"
 OUTPUT_DIR_PATH="${SCRIPT_DIR_PATH}/dist"
 OUTPUT_BASENAME="$(basename "${INPUT_MD_PATH}" .md)"
 
 if [[ -d "${THEMES_DIR_PATH}" ]]; then
-  cd "${THEMES_DIR_PATH}" && git pull && cd -
+  cd "${THEMES_DIR_PATH}" && git pull && cd "${SCRIPT_DIR_PATH}"
 else
   git clone https://github.com/rnd195/marp-community-themes.git "${THEMES_DIR_PATH}"
 fi

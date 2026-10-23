@@ -12,16 +12,3 @@ updates:
       github-actions-dependencies:
         patterns:
           - '*'
-  - package-ecosystem: npm
-    directories:
-      - /.claude/skills/pptx/
-      - /workspace/
-    schedule:
-      interval: daily
-    cooldown:
-      default-days: 1
-    open-pull-requests-limit: 10
-    groups:
-      npm-dependencies:
-        patterns:
-          - '*'
